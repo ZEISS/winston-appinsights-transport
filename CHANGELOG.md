@@ -1,5 +1,8 @@
 # ApplicationInsights Winstron Transport
 
+## 0.1.2
+- added type declaration file for winston-transport
+
 ## 0.1.1
 
 - fixed wrong main entry in package.json
