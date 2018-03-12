@@ -1,0 +1,11 @@
+src/
+.editorconfig
+.gitignore
+jest.config.js
+.travis.yml
+tsconfig.json
+*.tgz
+yarn.lock
+package-lock.json
+prettier.config.js
+tslint.json
