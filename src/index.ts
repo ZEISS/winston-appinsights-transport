@@ -1,4 +1,4 @@
-import * as Transport from 'winston-transport';
+import * as TransportStream from 'winston-transport';
 import * as ai from 'applicationinsights';
 
 export interface AppInsightsCustomFields {
@@ -8,16 +8,6 @@ export interface AppInsightsCustomFields {
 export interface AppInsightsOptions {
   instrumentationKey: string;
   customFields?: AppInsightsCustomFields;
-}
-
-export interface TransportLogInfo {
-  message: string;
-  level: string;
-  [key: string]: string;
-}
-
-export interface TransportLog {
-  (info: TransportLogInfo, callback: Function): void;
 }
 
 export enum Levels {
@@ -45,32 +35,28 @@ export const getApplicationInsightsSeverity = (level: string): ai.Contracts.Seve
   }
 };
 
-export class AppInsightsTransport extends Transport {
-  client: ai.TelemetryClient;
-  customFields: AppInsightsCustomFields;
+export class AppInsightsTransport extends TransportStream {
+  private client: ai.TelemetryClient;
+  private customFields: AppInsightsCustomFields;
 
-  constructor(opts: any) {
-    // TODO:
-    // Either provide a real module definition for winston-transport (preferred) or create an issue with
-    // the library maintainer: https://github.com/winstonjs/winston-transport
-    // @ts-ignore
-    super(opts);
+  constructor({ instrumentationKey, customFields, ...options }: AppInsightsOptions & TransportStream.TransportOptions) {
+    super(options);
 
     // We disabled auto collecting exceptions and requests because we need to inject the request id manually
     ai
-      .setup(opts.instrumentationKey)
+      .setup(instrumentationKey)
       .setAutoCollectConsole(false)
       .setAutoCollectExceptions(false)
       .setAutoCollectRequests(false)
       .start();
 
     this.client = ai.defaultClient;
-    this.customFields = opts.customFields;
+    this.customFields = customFields;
 
     this.handleUnhandledErrors();
   }
 
-  handleUnhandledErrors() {
+  private handleUnhandledErrors() {
     const unhandledError = (exception: Error) => {
       this.client.trackException({
         exception,
@@ -84,7 +70,7 @@ export class AppInsightsTransport extends Transport {
     process.on('unhandledRejection', unhandledError);
   }
 
-  log({ message, level, ...properties }: TransportLogInfo, callback: Function): void {
+  log({ message, level, ...properties }: TransportStream.TransportLogInfo, callback: Function) {
     const overwritteCustomFields = Object.keys(properties).reduce(
       (acc, key) => (Object.keys(this.customFields).includes(key) ? [...acc, key] : acc),
       [],
@@ -104,6 +90,6 @@ export class AppInsightsTransport extends Transport {
       properties: { ...properties, ...this.customFields },
     });
 
-    callback();
+    return callback(null);
   }
 }
