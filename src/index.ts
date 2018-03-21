@@ -67,7 +67,7 @@ export class AppInsightsTransport extends TransportStream {
       throw exception;
     };
 
-    process.on('uncaughtException', unhandledError);
+    //process.on('uncaughtException', unhandledError); // hack to fix the crashes...
     process.on('unhandledRejection', unhandledError);
   }
 

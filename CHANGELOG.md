@@ -1,5 +1,8 @@
 # ApplicationInsights Winstron Transport
 
+## 0.1.5
+- deactivate uncaughtExceptionHandler
+
 ## 0.1.4
 - fix for pm2
 
