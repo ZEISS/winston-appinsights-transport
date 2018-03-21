@@ -48,6 +48,7 @@ export class AppInsightsTransport extends TransportStream {
       .setAutoCollectConsole(false)
       .setAutoCollectExceptions(false)
       .setAutoCollectRequests(false)
+      .setAutoDependencyCorrelation(false) // this is needed because otherwise winston + AI + pm2 crashes for unknown reasons...
       .start();
 
     this.client = ai.defaultClient;
