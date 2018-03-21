@@ -1,5 +1,8 @@
 # ApplicationInsights Winstron Transport
 
+## 0.1.4
+- fix for pm2
+
 ## 0.1.3
 - added type dir to package.json
 
