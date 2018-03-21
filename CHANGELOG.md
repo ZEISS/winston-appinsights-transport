@@ -1,7 +1,7 @@
 # ApplicationInsights Winstron Transport
 
 ## 0.1.4
-- fix for pm2
+- fixed crash in combination with pm2 by calling .setAutoDependencyCorrelation(false)
 
 ## 0.1.3
 - added type dir to package.json
