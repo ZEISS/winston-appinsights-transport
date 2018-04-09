@@ -2,7 +2,7 @@ import * as TransportStream from 'winston-transport';
 import * as ai from 'applicationinsights';
 
 export interface AppInsightsCustomFields {
-  [key: string]: string;
+  [key: string]: any;
 }
 
 export interface AppInsightsOptions {
@@ -94,19 +94,26 @@ export class AppInsightsTransport extends TransportStream {
       });
     }
 
-    this.client.trackTrace({
-      message: message,
-      severity: getApplicationInsightsSeverity(level),
-      properties: { ...properties, ...this.customFields },
-    });
+    if (properties.url) {
+      const { name, url, duration, resultCode, success, source, ...customFields } = properties;
+
+      this.client.trackRequest({
+        name: properties.name,
+        url: properties.url,
+        duration: parseInt(properties.duration, 10),
+        resultCode: properties.resultCode,
+        success: !!properties.success,
+        source: properties.source,
+        properties: { ...customFields, ...this.customFields },
+      });
+    } else {
+      this.client.trackTrace({
+        message: message,
+        severity: getApplicationInsightsSeverity(level),
+        properties: { ...properties, ...this.customFields },
+      });
+    }
 
     return callback(null);
-  }
-
-  request(req: AppInsightsRequest, properties: AppInsightsCustomFields) {
-    this.client.trackRequest({
-      ...req,
-      properties: { ...properties, ...this.customFields },
-    });
   }
 }
