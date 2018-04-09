@@ -10,6 +10,15 @@ export interface AppInsightsOptions {
   customFields?: AppInsightsCustomFields;
 }
 
+export interface AppInsightsRequest {
+  name: string;
+  url: string;
+  source?: string;
+  duration: number;
+  resultCode: string | number;
+  success: boolean;
+}
+
 export enum Levels {
   fatal = 0,
   error = 1,
@@ -92,5 +101,12 @@ export class AppInsightsTransport extends TransportStream {
     });
 
     return callback(null);
+  }
+
+  request(req: AppInsightsRequest, properties: AppInsightsCustomFields) {
+    this.client.trackRequest({
+      ...req,
+      properties: { ...properties, ...this.customFields },
+    });
   }
 }
