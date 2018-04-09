@@ -2,7 +2,7 @@ import * as TransportStream from 'winston-transport';
 import * as ai from 'applicationinsights';
 
 export interface AppInsightsCustomFields {
-  [key: string]: string;
+  [key: string]: any;
 }
 
 export interface AppInsightsOptions {
@@ -25,6 +25,15 @@ export enum Levels {
   warn = 2,
   info = 3,
   debug = 4,
+}
+
+export enum Types {
+  TRACE = ai.Contracts.TelemetryType.Trace,
+  REQUEST = ai.Contracts.TelemetryType.Request,
+  EVENT = ai.Contracts.TelemetryType.Event,
+  EXCEPTION = ai.Contracts.TelemetryType.Exception,
+  METRIC = ai.Contracts.TelemetryType.Metric,
+  DEPENDENCY = ai.Contracts.TelemetryType.Dependency,
 }
 
 export const getApplicationInsightsSeverity = (level: string): ai.Contracts.SeverityLevel => {
@@ -94,19 +103,23 @@ export class AppInsightsTransport extends TransportStream {
       });
     }
 
-    this.client.trackTrace({
-      message: message,
-      severity: getApplicationInsightsSeverity(level),
-      properties: { ...properties, ...this.customFields },
-    });
+    if (properties.url) {
+      this.client.trackRequest({
+        name: properties.name,
+        url: properties.url,
+        duration: parseInt(properties.duration, 10),
+        resultCode: properties.resultCode,
+        success: !!properties.success,
+        source: properties.source,
+      });
+    } else {
+      this.client.trackTrace({
+        message: message,
+        severity: getApplicationInsightsSeverity(level),
+        properties: { ...properties, ...this.customFields },
+      });
+    }
 
     return callback(null);
-  }
-
-  request(req: AppInsightsRequest, properties: AppInsightsCustomFields) {
-    this.client.trackRequest({
-      ...req,
-      properties: { ...properties, ...this.customFields },
-    });
   }
 }

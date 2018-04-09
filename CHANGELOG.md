@@ -1,5 +1,8 @@
 # ApplicationInsights Winstron Transport
 
+## 0.1.7
+- fix for request logging
+
 ## 0.1.6
 - expose request log api
 
