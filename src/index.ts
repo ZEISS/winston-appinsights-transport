@@ -27,15 +27,6 @@ export enum Levels {
   debug = 4,
 }
 
-export enum Types {
-  TRACE = ai.Contracts.TelemetryType.Trace,
-  REQUEST = ai.Contracts.TelemetryType.Request,
-  EVENT = ai.Contracts.TelemetryType.Event,
-  EXCEPTION = ai.Contracts.TelemetryType.Exception,
-  METRIC = ai.Contracts.TelemetryType.Metric,
-  DEPENDENCY = ai.Contracts.TelemetryType.Dependency,
-}
-
 export const getApplicationInsightsSeverity = (level: string): ai.Contracts.SeverityLevel => {
   switch (level) {
     case Levels[Levels.debug]:
