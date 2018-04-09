@@ -1,6 +1,6 @@
 {
   "name": "winston-appinsights-transport",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A winston transport for Application Insights",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

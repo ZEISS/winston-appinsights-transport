@@ -1,5 +1,8 @@
 # ApplicationInsights Winstron Transport
 
+## 0.1.6
+- expose request log api
+
 ## 0.1.5
 - deactivate uncaughtExceptionHandler
 
