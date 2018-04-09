@@ -104,6 +104,8 @@ export class AppInsightsTransport extends TransportStream {
     }
 
     if (properties.url) {
+      const { name, url, duration, resultCode, success, source, ...customFields } = properties;
+
       this.client.trackRequest({
         name: properties.name,
         url: properties.url,
@@ -111,6 +113,7 @@ export class AppInsightsTransport extends TransportStream {
         resultCode: properties.resultCode,
         success: !!properties.success,
         source: properties.source,
+        properties: { ...customFields, ...this.customFields },
       });
     } else {
       this.client.trackTrace({
