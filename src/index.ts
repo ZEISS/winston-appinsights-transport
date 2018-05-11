@@ -8,6 +8,12 @@ export interface AppInsightsCustomFields {
 export interface AppInsightsOptions {
   instrumentationKey: string;
   customFields?: AppInsightsCustomFields;
+  clientOptions?: ClientOptions;
+}
+
+export interface ClientOptions {
+  maxBatchIntervalMs?: number;
+  useDiskRetryCaching?: boolean;
 }
 
 export interface AppInsightsRequest {
@@ -48,7 +54,7 @@ export class AppInsightsTransport extends TransportStream {
   private client: ai.TelemetryClient;
   private customFields: AppInsightsCustomFields;
 
-  constructor({ instrumentationKey, customFields, ...options }: AppInsightsOptions & TransportStream.TransportOptions) {
+  constructor({ instrumentationKey, customFields, clientOptions, ...options }: AppInsightsOptions & TransportStream.TransportOptions) {
     super(options);
 
     // We disabled auto collecting exceptions and requests because we need to inject the request id manually
@@ -58,9 +64,13 @@ export class AppInsightsTransport extends TransportStream {
       .setAutoCollectExceptions(false)
       .setAutoCollectRequests(false)
       .setAutoDependencyCorrelation(false) // this is needed because otherwise winston + AI + pm2 crashes for unknown reasons...
+      .setUseDiskRetryCaching(clientOptions ? clientOptions.useDiskRetryCaching : true)
       .start();
 
     this.client = ai.defaultClient;
+    if (clientOptions && clientOptions.maxBatchIntervalMs) {
+      this.client.config.maxBatchIntervalMs = clientOptions.maxBatchIntervalMs;
+    }
     this.customFields = customFields;
 
     this.handleUnhandledErrors();

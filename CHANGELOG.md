@@ -1,5 +1,8 @@
 # ApplicationInsights Winstron Transport
 
+## 0.2.0
+- expose maxBatchIntervalMs and useRetryDiskCache options
+
 ## 0.1.7
 - fix for request logging
 
