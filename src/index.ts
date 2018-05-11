@@ -54,8 +54,18 @@ export class AppInsightsTransport extends TransportStream {
   private client: ai.TelemetryClient;
   private customFields: AppInsightsCustomFields;
 
-  constructor({ instrumentationKey, customFields, clientOptions, ...options }: AppInsightsOptions & TransportStream.TransportOptions) {
+  constructor({
+    instrumentationKey,
+    customFields,
+    clientOptions,
+    ...options
+  }: AppInsightsOptions & TransportStream.TransportOptions) {
     super(options);
+
+    const useDiskRetryCaching =
+      clientOptions && typeof clientOptions.useDiskRetryCaching !== 'undefined'
+        ? clientOptions.useDiskRetryCaching
+        : true;
 
     // We disabled auto collecting exceptions and requests because we need to inject the request id manually
     ai
@@ -64,7 +74,7 @@ export class AppInsightsTransport extends TransportStream {
       .setAutoCollectExceptions(false)
       .setAutoCollectRequests(false)
       .setAutoDependencyCorrelation(false) // this is needed because otherwise winston + AI + pm2 crashes for unknown reasons...
-      .setUseDiskRetryCaching(clientOptions ? clientOptions.useDiskRetryCaching : true)
+      .setUseDiskRetryCaching(useDiskRetryCaching)
       .start();
 
     this.client = ai.defaultClient;
