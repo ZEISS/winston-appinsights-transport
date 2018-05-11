@@ -1,5 +1,8 @@
 # ApplicationInsights Winstron Transport
 
+## 0.2.1
+- fix for wrong `useRetryDiskCach` default when client options a present but the key is undefined
+
 ## 0.2.0
 - expose maxBatchIntervalMs and useRetryDiskCache options
 
