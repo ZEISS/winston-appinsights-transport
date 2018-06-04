@@ -24,6 +24,11 @@ export interface AppInsightsRequest {
   resultCode: string | number;
   success: boolean;
 }
+export interface TransportLogInfo {
+  message: string;
+  level: string;
+  [x: string]: string;
+}
 
 export enum Levels {
   fatal = 0,
@@ -32,6 +37,8 @@ export enum Levels {
   info = 3,
   debug = 4,
 }
+
+export type AppInsightsTransportOptions = AppInsightsOptions & TransportStream.TransportStreamOptions;
 
 export const getApplicationInsightsSeverity = (level: string): ai.Contracts.SeverityLevel => {
   switch (level) {
@@ -54,8 +61,13 @@ export class AppInsightsTransport extends TransportStream {
   private client: ai.TelemetryClient;
   private customFields: AppInsightsCustomFields;
 
-  constructor({ instrumentationKey, customFields, clientOptions, ...options }: AppInsightsOptions & TransportStream.TransportOptions) {
+  constructor({ instrumentationKey, customFields, clientOptions, ...options }: AppInsightsTransportOptions) {
     super(options);
+
+    const useDiskRetryCaching =
+      clientOptions && typeof clientOptions.useDiskRetryCaching !== 'undefined'
+        ? clientOptions.useDiskRetryCaching
+        : true;
 
     // We disabled auto collecting exceptions and requests because we need to inject the request id manually
     ai
@@ -64,7 +76,7 @@ export class AppInsightsTransport extends TransportStream {
       .setAutoCollectExceptions(false)
       .setAutoCollectRequests(false)
       .setAutoDependencyCorrelation(false) // this is needed because otherwise winston + AI + pm2 crashes for unknown reasons...
-      .setUseDiskRetryCaching(clientOptions ? clientOptions.useDiskRetryCaching : true)
+      .setUseDiskRetryCaching(useDiskRetryCaching)
       .start();
 
     this.client = ai.defaultClient;
@@ -90,7 +102,7 @@ export class AppInsightsTransport extends TransportStream {
     process.on('unhandledRejection', unhandledError);
   }
 
-  log({ message, level, ...properties }: TransportStream.TransportLogInfo, callback: Function) {
+  log({ message, level, ...properties }: TransportLogInfo, next: () => void) {
     const overwritteCustomFields = Object.keys(properties).reduce(
       (acc, key) => (Object.keys(this.customFields).includes(key) ? [...acc, key] : acc),
       [],
@@ -124,6 +136,6 @@ export class AppInsightsTransport extends TransportStream {
       });
     }
 
-    return callback(null);
+    return next();
   }
 }
