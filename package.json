@@ -1,6 +1,6 @@
 {
   "name": "winston-appinsights-transport",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A winston transport for Application Insights",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,8 +15,8 @@
     "ts-jest": "^22.0.4",
     "ts-node": "^4.1.0",
     "typescript": "^2.7.2",
-    "winston": "^3.0.0-rc1",
-    "winston-transport": "^3.0.1"
+    "winston": "^3.0.0-rc6",
+    "winston-transport": "^4.1.0"
   },
   "peerDependencies": {
     "winston": "^3.0.0-rc1",
