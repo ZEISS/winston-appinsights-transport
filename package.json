@@ -1,7 +1,7 @@
 {
   "name": "winston-appinsights-transport",
-  "version": "0.2.0",
-  "description": "A winston transport for Application Insights",
+  "version": "0.2.1",
+  "description": "A winston transport for Application Insights.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "dependencies": {},
@@ -11,8 +11,9 @@
     "@types/winston": "^2.3.8",
     "applicationinsights": "^1.0.2",
     "jest": "^22.4.2",
-    "nodemon": "^1.15.1",
-    "ts-jest": "^22.0.4",
+    "jest-cli": "^23.6.0",
+    "nodemon": "^1.18.6",
+    "ts-jest": "^23.10.4",
     "ts-node": "^4.1.0",
     "typescript": "^2.7.2",
     "winston": "^3.0.0-rc1",
@@ -29,6 +30,6 @@
     "demo": "ts-node src/demo.ts",
     "build": "tsc --project tsconfig.json"
   },
-  "author": "",
+  "author": "ZEISS <portal@zeiss.com>",
   "license": "MIT"
 }
