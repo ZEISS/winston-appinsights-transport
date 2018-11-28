@@ -1,5 +1,10 @@
 # ApplicationInsights Winstron Transport
 
+## 0.2.2
+
+- Updated dependencies due to GHSA-mh6f-8j2x-4483
+- Updated peer dependencies
+
 ## 0.2.1
 
 - Updated dependencies due to CVE-2018-3750
