@@ -1,14 +1,17 @@
 {
   "name": "winston-appinsights-transport",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "A winston transport for Application Insights.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZEISS/winston-appinsights-transport"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/node": "^10.12.10",
-    "@types/winston": "^2.3.8",
     "applicationinsights": "^1.0.7",
     "jest": "^23.3.6",
     "jest-cli": "^23.6.0",
@@ -16,8 +19,8 @@
     "ts-jest": "^23.10.4",
     "ts-node": "^7.0.1",
     "typescript": "^2.9.2",
-    "winston": "^3.1.0",
-    "winston-transport": "^4.2.0"
+    "winston": "^3.2.1",
+    "winston-transport": "^4.3.0"
   },
   "peerDependencies": {
     "winston": "^3.x",
