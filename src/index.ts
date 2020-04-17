@@ -50,16 +50,26 @@ export const getApplicationInsightsSeverity = (level: string): ai.Contracts.Seve
   }
 };
 
+export interface TransportLogInfo {
+  message: string;
+  level: string;
+  [x: string]: string;
+}
+
 export class AppInsightsTransport extends TransportStream {
   private client: ai.TelemetryClient;
   private customFields: AppInsightsCustomFields;
 
-  constructor({ instrumentationKey, customFields, clientOptions, ...options }: AppInsightsOptions & TransportStream.TransportOptions) {
+  constructor({
+    instrumentationKey,
+    customFields,
+    clientOptions,
+    ...options
+  }: AppInsightsOptions & TransportStream.TransportStreamOptions) {
     super(options);
 
     // We disabled auto collecting exceptions and requests because we need to inject the request id manually
-    ai
-      .setup(instrumentationKey)
+    ai.setup(instrumentationKey)
       .setAutoCollectConsole(false)
       .setAutoCollectExceptions(false)
       .setAutoCollectRequests(false)
@@ -90,7 +100,7 @@ export class AppInsightsTransport extends TransportStream {
     process.on('unhandledRejection', unhandledError);
   }
 
-  log({ message, level, ...properties }: TransportStream.TransportLogInfo, callback: Function) {
+  log({ message, level, ...properties }: TransportLogInfo, callback: () => void) {
     const overwritteCustomFields = Object.keys(properties).reduce(
       (acc, key) => (Object.keys(this.customFields).includes(key) ? [...acc, key] : acc),
       [],
@@ -124,6 +134,6 @@ export class AppInsightsTransport extends TransportStream {
       });
     }
 
-    return callback(null);
+    return callback();
   }
 }

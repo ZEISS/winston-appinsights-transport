@@ -1,5 +1,10 @@
 # ApplicationInsights Winstron Transport
 
+## 0.3.0
+
+- Update dependencies
+- Use provided type definitions by winston
+
 ## 0.2.2
 
 - Updated dependencies due to GHSA-mh6f-8j2x-4483
