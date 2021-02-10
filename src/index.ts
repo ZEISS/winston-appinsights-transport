@@ -81,6 +81,9 @@ export class AppInsightsTransport extends TransportStream {
     if (clientOptions && clientOptions.maxBatchIntervalMs) {
       this.client.config.maxBatchIntervalMs = clientOptions.maxBatchIntervalMs;
     }
+    if (customFields && customFields.serviceName) {
+      this.client.context.tags[ai.defaultClient.context.keys.cloudRole] = customFields.serviceName;
+    }
     this.customFields = customFields;
 
     this.handleUnhandledErrors();
