@@ -1,5 +1,10 @@
 # ApplicationInsights Winstron Transport
 
+## 0.3.1
+
+- Make application insights' role name configurable
+- Update dependencies
+
 ## 0.3.0
 
 - Update dependencies
